@@ -23,6 +23,8 @@ import io.trino.testing.MaterializedResult;
 import io.trino.testing.QueryRunner;
 import io.trino.testing.ResultWithQueryId;
 import io.trino.testing.sql.TestTable;
+import org.testng.SkipException;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.time.Instant;
@@ -37,7 +39,6 @@ import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Test(enabled = false) // TODO (https://github.com/trinodb/trino/issues/11325): hadoop container sometimes fails during the test (e.g. testAnalyzeWithFilesModifiedAfter)
 // smoke test which covers ANALYZE compatibility with different filesystems is part of AbstractTestDeltaLakeIntegrationSmokeTest
 public class TestDeltaLakeAnalyze
         extends AbstractTestQueryFramework
@@ -62,6 +63,13 @@ public class TestDeltaLakeAnalyze
                 ImmutableMap.of("delta.enable-non-concurrent-writes", "true"),
                 dockerizedMinioDataLake.getMinioAddress(),
                 dockerizedMinioDataLake.getTestingHadoop());
+    }
+
+    @BeforeClass
+    public void disableTest()
+    {
+        // TODO (https://github.com/trinodb/trino/issues/11325): hadoop container sometimes fails during the test (e.g. testAnalyzeWithFilesModifiedAfter)
+        throw new SkipException("TODO re-enable");
     }
 
     @Test
